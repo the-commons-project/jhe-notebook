@@ -42,7 +42,26 @@ The JHE Notebook connects:
 
 ## Prerequisites
 
-### 0. Python 3.10+
+### 0. JupyterHealth Exchange with MCP Support
+
+**Important**: You need the MCP-enabled version of JupyterHealth Exchange.
+
+Clone the JupyterHealth Exchange repository and checkout the MCP feature branch:
+```bash
+git clone https://github.com/jupyterhealth/jupyterhealth-exchange.git
+cd jupyterhealth-exchange
+
+# TODO: Update this when PR is merged - for now use the feature branch
+git fetch origin pull/XXX/head:mcp-support  # Replace XXX with actual PR number
+git checkout mcp-support
+```
+
+Follow the JupyterHealth Exchange setup instructions to:
+- Install dependencies
+- Configure the database
+- Seed test data
+
+### 1. Python 3.10+
 
 **Important**: The MCP Python SDK requires Python 3.10 or later.
 
@@ -60,17 +79,17 @@ brew install python@3.11
 python3.11 -m venv .venv
 ```
 
-### 1. Running Infrastructure
+### 2. Running Infrastructure
 
 **JupyterHealth Exchange Server** must be running:
 ```bash
-cd /Users/patrickcarter/tcp_repos/JupyterHealth/jupyterhealth-exchange
+cd /path/to/jupyterhealth-exchange
 .venv/bin/python manage.py runserver
 ```
 
 **MCP Server** must be running:
 ```bash
-cd /Users/patrickcarter/tcp_repos/JupyterHealth/jupyterhealth-exchange
+cd /path/to/jupyterhealth-exchange
 ./start_mcp_server.sh
 ```
 
@@ -80,7 +99,7 @@ curl http://localhost:8000/admin/  # Should return 200
 curl http://localhost:8001/health  # Should return {"status": "healthy"}
 ```
 
-### 2. NRP API Access
+### 3. NRP API Access
 
 You need an API key from the National Research Platform:
 1. Visit https://portal.nrp.ai/
@@ -88,7 +107,7 @@ You need an API key from the National Research Platform:
 3. Generate an API token
 4. Note the model name (e.g., `qwen3`)
 
-### 3. Async Event Loop Compatibility
+### 4. Async Event Loop Compatibility
 
 **Important**: The MCP Python SDK requires `nest-asyncio` to work in Jupyter notebooks:
 - Jupyter runs an active asyncio event loop
@@ -103,19 +122,24 @@ This is automatically installed via requirements.txt and applied in the notebook
 - SQL injection protection
 - Read-only operations only
 
-### 4. OAuth Authentication
+### 5. OAuth Authentication
 
 The MCP server uses OAuth to authenticate with JHE. You should have already completed the OAuth flow (tokens cached at `~/.jhe_mcp/token_cache.json`). If not, the notebook will guide you through authentication.
 
 ## Setup
 
-### 1. Create Virtual Environment
+### 1. Clone This Repository
+
+```bash
+git clone https://github.com/the-commons-project/jhe-notebook.git
+cd jhe-notebook
+```
+
+### 2. Create Virtual Environment
 
 **Important**: Use Python 3.10+ (e.g., python3.11)
 
 ```bash
-cd /Users/patrickcarter/tcp_repos/JupyterHealth/jhe-notebook
-
 # Use Python 3.11 (or 3.10+)
 python3.11 -m venv .venv
 
@@ -123,13 +147,13 @@ python3.11 -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
-### 2. Install Dependencies
+### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Configure Environment Variables
+### 4. Configure Environment Variables
 
 ```bash
 cp .env.example .env
@@ -144,7 +168,7 @@ NRP_API_KEY=your_actual_api_key_here
 NRP_MODEL=qwen3
 ```
 
-### 4. Start Jupyter
+### 5. Start Jupyter
 
 ```bash
 jupyter notebook
